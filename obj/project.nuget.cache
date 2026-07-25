@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "x2ryMfE+XLM=",
+  "success": true,
+  "projectFilePath": "D:\\dotNet\\Code.Net\\Blazor\\Homework\\homework\\homework.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\shin\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.7\\microsoft.aspnetcore.app.internal.assets.10.0.7.nupkg.sha512"
+  ],
+  "logs": []
+}
