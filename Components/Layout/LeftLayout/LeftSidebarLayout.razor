@@ -1,0 +1,18 @@
+@namespace homework.Components.Layout.LeftLayout
+@inherits LayoutComponentBase
+
+<div class="d-flex flex-column flex-lg-row" style="min-height: 100vh;">
+
+    <!-- Sidebar -->
+    <div class="sidebar-wrapper">
+        <LeftNavMenu />
+    </div>
+
+    <!-- Nội dung chính -->
+    <div class="flex-grow-1 d-flex justify-content-center align-items-center main-content">
+        <main class="container-fluid p-5">
+            @Body
+        </main>
+    </div>
+</div>
+

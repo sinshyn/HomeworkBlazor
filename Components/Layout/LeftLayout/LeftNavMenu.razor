@@ -1,0 +1,78 @@
+@* NavMenu.razor *@
+@inject NavigationManager NavigationManager
+
+<nav class="navbar" style="background-color: var(--primary-color);">
+
+    <!-- Top Bar - Mobile & Tablet -->
+    <div class="d-lg-none w-100 px-4 py-3 d-flex align-items-center justify-content-between border-bottom border-light border-opacity-25">
+        <div>
+            <h5 class="mb-0 text-white fw-bold">Clarence Taylor</h5>
+            <small class="text-white-50">Your Position</small>
+        </div>
+        <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu" aria-label="Toggle navigation" aria-expanded="@isNavMenuOpen">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+
+    <!-- Sidebar Content -->
+    <div class="d-flex flex-column align-items-center justify-content-center w-100">
+
+        <!-- Profile - Desktop only -->
+        <div class="d-none d-lg-flex flex-column align-items-center">
+            <div class="profile-img">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkPcISpo05fF-yTimw2Fp_XXPzWWQ9QGcs7HbEMxlxSQ&s=10"
+                     alt="Profile" class="rounded-circle img-fluid" />
+            </div>
+        </div>
+
+        <!-- Menu -->
+        <div class="@NavMenuCssClass flex-lg-column justify-content-center flex-grow-1 w-100" id="navbarNav">
+            <ul class="navbar-nav flex-column w-100 text-center">
+                <li class="nav-item">
+                    <NavLink class="nav-link" ActiveClass="active" href="/about" Match="NavLinkMatch.All">
+                        <i class="bi bi-person me-2"></i> ABOUT
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" ActiveClass="active" href="/experience" Match="NavLinkMatch.All">
+                        <i class="bi bi-briefcase me-2"></i> EXPERIENCE
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" ActiveClass="active" href="/education" Match="NavLinkMatch.All">
+                        <i class="bi bi-mortarboard me-2"></i> EDUCATION
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" ActiveClass="active" href="/skills" Match="NavLinkMatch.All">
+                        <i class="bi bi-star me-2"></i> SKILLS
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" ActiveClass="active" href="/interests" Match="NavLinkMatch.All">
+                        <i class="bi bi-heart me-2"></i> INTERESTS
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" ActiveClass="active" href="/awards" Match="NavLinkMatch.All">
+                        <i class="bi bi-trophy me-2"></i> AWARDS
+                    </NavLink>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+@code {
+    private bool isNavMenuOpen = false;
+
+    private string NavMenuCssClass =>
+        isNavMenuOpen
+            ? "navbar-collapse show d-flex"
+            : "navbar-collapse d-none d-lg-flex";
+
+    private void ToggleNavMenu()
+    {
+        isNavMenuOpen = !isNavMenuOpen;
+    }
+}
