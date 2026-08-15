@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-public class RegistorVM
+public class UserVM
 {
     // Họ và tên
     [Required(ErrorMessage = "Họ và tên là bắt buộc.")]
@@ -23,20 +23,9 @@ public class RegistorVM
     public string Phone { get; set; } = string.Empty;
 
 
-    // Địa chỉ - Không bắt buộc
-    [MinLength(5, ErrorMessage = "Địa chỉ phải có ít nhất 5 ký tự.")]
-    public string? Address { get; set; }
 
 
-    // Lời nhắn
-    [Required(ErrorMessage = "Lời nhắn là bắt buộc.")]
-    [MinLength(10, ErrorMessage = "Lời nhắn phải có ít nhất 10 ký tự.")]
-    public string Message { get; set; } = string.Empty;
 
-
-    // Dịch vụ
-    [Required(ErrorMessage = "Vui lòng chọn một dịch vụ.")]
-    public string Service { get; set; } = string.Empty;
 
 
     // Điều khoản và điều kiện

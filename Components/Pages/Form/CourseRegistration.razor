@@ -8,70 +8,83 @@
         <div class="row">
             <div class="col-8">
                 <h1 class="text-center">Course Registration Form</h1>
-                <EditForm EditContext="@editContext" class="px-5 row g-3" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+                <EditForm EditContext="@editContext" class="px-5 row g-3" OnValidSubmit="HandleValidSubmit"
+                          OnInvalidSubmit="HandleInvalidSubmit">
                     <DataAnnotationsValidator />
 
                     <div class="col-md-12">
                         <label for="fullName" class="form-label">Full Name *</label>
                         <input @bind="@regisModel.FullName" @bind:event="oninput" type="text"
-                               class="form-control @(GetFieldClass("FullName"))"
-                               id="fullName" placeholder="Enter your full name" />
+                               class="form-control @(GetFieldClass("FullName"))" id="fullName"
+                               placeholder="Enter your full name" />
                         <ValidationMessage For="@(() => regisModel.FullName)" class="text-danger small" />
                     </div>
 
                     <div class="col-md-12">
                         <label for="email" class="form-label">Email *</label>
                         <input @bind="@regisModel.Email" @bind:event="oninput" type="email"
-                               class="form-control @(GetFieldClass("Email"))"
-                               id="email" placeholder="Enter your email" />
+                               class="form-control @(GetFieldClass("Email"))" id="email" placeholder="Enter your email" />
                         <ValidationMessage For="@(() => regisModel.Email)" class="text-danger small" />
                     </div>
 
                     <div class="col-md-12">
                         <label for="phone" class="form-label">Phone Number *</label>
                         <input @bind="@regisModel.Phone" @bind:event="oninput" type="tel"
-                               class="form-control @(GetFieldClass("Phone"))"
-                               id="phone" placeholder="Enter your phone number" />
+                               class="form-control @(GetFieldClass("Phone"))" id="phone"
+                               placeholder="Enter your phone number" />
                         <ValidationMessage For="@(() => regisModel.Phone)" class="text-danger small" />
                     </div>
 
                     <div class="col-md-12">
-                        <label for="address" class="form-label">Address</label>
-                        <input @bind="@regisModel.Address" @bind:event="oninput" type="text"
-                               class="form-control @(GetFieldClass("Address"))"
-                               id="address" placeholder="Enter your address" />
-                        <ValidationMessage For="@(() => regisModel.Address)" class="text-danger small" />
-                    </div>
-
-                    <div class="col-md-12">
-                        <label for="message" class="form-label">Message *</label>
-                        <textarea @bind="@regisModel.Message" @bind:event="oninput"
-                                  class="form-control @(GetFieldClass("Message"))"
-                                  id="message" rows="5" placeholder="Enter your message"></textarea>
-                        <ValidationMessage For="@(() => regisModel.Message)" class="text-danger small" />
-                    </div>
-
-                    <div class="col-md-12">
-                        <label for="service" class="form-label">Select Service *</label>
-                        <select @bind="@regisModel.Service"
-                                class="form-select @(GetFieldClass("Service"))"
-                                name="service" id="service">
-                            <option value="">Chọn dịch vụ</option>
-                            <option value="Mua sắm">Mua sắm</option>
-                            <option value="Đi ăn">Đi ăn</option>
-                            <option value="Du lịch">Du lịch</option>
-                            <option value="Đặt phòng">Đặt phòng</option>
-                            <option value="Đặt xe">Đặt xe</option>
-                            <option value="Thuê xe tự lái">Thuê xe tự lái</option>
+                        <label for="course" class="form-label">Select Course *</label>
+                        <select @bind="@regisModel.Course" class="form-select @(GetFieldClass("Course"))">
+                            <option value="">Chọn khóa học</option>
+                            @foreach (var course in courseOptions)
+                            {
+                                <option value="@course.Value">@course.Label</option>
+                            }
                         </select>
-                        <ValidationMessage For="@(() => regisModel.Service)" class="text-danger small" />
+                        <ValidationMessage For="@(() => regisModel.Course)" class="text-danger small" />
                     </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label d-block">Study Mode *</label>
+
+                        <InputRadioGroup @bind-Value="regisModel.StudyMode" Name="studymode">
+                            <div class="form-check form-check-inline">
+                                <InputRadio Value="@("Online")" class="form-check-input" id="studyModeOnline" />
+                                <label class="form-check-label" for="studyModeOnline">Online</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <InputRadio Value="@("Offline")" class="form-check-input" id="studyModeOffline" />
+                                <label class="form-check-label" for="studyModeOffline">Offline</label>
+                            </div>
+                        </InputRadioGroup>
+                        <ValidationMessage For="@(() => regisModel.StudyMode)" class="text-danger small" />
+                    </div>
+                    <div class="col-md-12">
+                        <label for="datePick" class="form-label">Ngày bắt đầu học *</label>
+                        <input @bind="@regisModel.DatePick" @bind:event="onchange" type="date"
+                               class="form-control @(GetFieldClass("DatePick"))" id="datePick"
+                               min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                        <ValidationMessage For="@(() => regisModel.DatePick)" class="text-danger small" />
+                    </div>
+
+
+                    <div class="col-md-12">
+                        <label for="notes" class="form-label">Comment or Notes *</label>
+                        <textarea @bind="@regisModel.Notes" @bind:event="oninput"
+                                  class="form-control @(GetFieldClass("Notes"))" id="notes" rows="5"
+                                  placeholder="Enter your notes"></textarea>
+                        <ValidationMessage For="@(() => regisModel.Notes)" class="text-danger small" />
+                    </div>
+
+                    
 
                     <div class="col-md-12">
                         <div class="form-check">
                             <input @bind="regisModel.TermsAccepted"
-                                   class="form-check-input @(GetFieldClass("TermsAccepted"))"
-                                   type="checkbox" id="terms" />
+                                   class="form-check-input @(GetFieldClass("TermsAccepted"))" type="checkbox" id="terms" />
                             <label class="form-check-label" for="terms">
                                 I accept the Terms and Conditions *
                             </label>
@@ -80,7 +93,7 @@
                     </div>
 
                     <div class="col-md-12">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary w-100 bg-success">Register</button>
                     </div>
                 </EditForm>
             </div>
@@ -90,9 +103,10 @@
                 <p>Họ tên: @regisModel.FullName</p>
                 <p>Email: @regisModel.Email</p>
                 <p>Số điện thoại: @regisModel.Phone</p>
-                <p>Địa chỉ: @regisModel.Address</p>
-                <p>Dịch vụ: @regisModel.Service</p>
-                <p>Lời nhắn: @regisModel.Message</p>
+                <p>hình thức học: @regisModel.StudyMode</p>
+                <p>Khóa học: @regisModel.Course</p>
+                <p>Ngày bắt đầu học: @(regisModel.DatePick?.ToString("dd/MM/yyyy") ?? "Chưa chọn")</p>
+                <p>Lời nhắn: @regisModel.Notes</p>
                 <p>Đồng ý điều khoản: @(regisModel.TermsAccepted ? "✅ Có" : "❌ Chưa")</p>
             </div>
         </div>
@@ -100,19 +114,37 @@
 </div>
 
 @code {
-    private RegistorVM regisModel = new RegistorVM();
+    private RegisterVM regisModel = new RegisterVM();
     private EditContext? editContext;
     private ValidationMessageStore? messageStore;
+
+
+    public class CourseOption
+    {
+        public string Value { get; set; } = string.Empty;
+        public string Label { get; set; } = string.Empty;
+    }
+
+    private List<CourseOption> courseOptions = new()
+{
+    new() { Value = "BanHangOnline", Label = "Bán hàng online" },
+    new() { Value = "CNTT", Label = "Công nghệ thông tin" },
+    new() { Value = "DuLich", Label = "Du lịch" },
+    new() { Value = "Dien", Label = "Điện" },
+    new() { Value = "ThietKeDoHoa", Label = "Thiết kế đồ họa" },
+};
+
+
 
     // Map field name → input id
     private readonly Dictionary<string, string> fieldIdMap = new()
     {
-        { "FullName",      "fullName" },
-        { "Email",         "email" },
-        { "Phone",         "phone" },
-        { "Address",       "address" },
-        { "Message",       "message" },
-        { "Service",       "service" },
+        { "FullName", "fullName" },
+        { "Email", "email" },
+        { "Phone", "phone" },
+        { "Address", "address" },
+        { "Notes", "notes" },
+        { "Course", "course" },
         { "TermsAccepted", "terms" },
     };
 
