@@ -1,0 +1,40 @@
+@page "/component/carlist"
+
+<PageTitle>CarList</PageTitle>
+
+<div class="container">
+    <div class="row">
+        @foreach (CarVM item in lstColor)
+        {
+            <div class="col-3">
+                <CarItem CarData="@item" />
+            </div>
+        }
+    </div>
+</div>
+@* hiện thị 4 chiếc xe *@
+
+
+@code {
+    @* danh sách 4 chiếc xe *@
+    private CarVM carModel = new CarVM
+    {
+        Name = "black car",
+        Img = "/imgs/CarBasic/Cars/black-car.jpg",
+    };
+    List<string> colorNames = new() { "black", "red", "silver", "steel" };
+
+    // Tự build danh sách CarVM từ tên màu, khỏi phải gõ tay từng object
+    private List<CarVM> lstColor => colorNames.Select(c => new CarVM
+    {
+        Name = c,
+        Img = $"/imgs/CarBasic/Cars/{c}-car.jpg",
+    }).ToList();
+
+    private void ChangeColor(CarVM car)
+    {
+        carModel.Name = $"{car.Name} car";
+        carModel.Img = car.Img;
+        carModel.Icon = car.Icon;
+    }
+}

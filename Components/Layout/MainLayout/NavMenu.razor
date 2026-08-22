@@ -13,15 +13,17 @@
                         Home
                     </NavLink>
                 </li>
+
                 <li class="nav-item">
                     <NavLink href="/leftsidebar/about" class="nav-link active" ActiveClass="text-danger"
                              Match="NavLinkMatch.All" aria-current="page">
                         Leftsidebar
                     </NavLink>
                 </li>
+
                 <li class="nav-item dropdown">
                     <NavLink class="nav-link dropdown-toggle" href="/form" ActiveClass="text-danger"
-                             Match="NavLinkMatch.Prefix"role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                             Match="NavLinkMatch.Prefix" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Forms
                     </NavLink>
                     <ul class="dropdown-menu">
@@ -36,6 +38,36 @@
                     </ul>
                 </li>
 
+                <li class="nav-item">
+                    <NavLink href="/change-car" class="nav-link active" ActiveClass="text-danger"
+                             Match="NavLinkMatch.All" aria-current="page">
+                        Car
+                    </NavLink>
+                </li>
+
+                <li class="nav-item">
+                    <NavLink href="/my-wallet" class="nav-link active" ActiveClass="text-danger"
+                             Match="NavLinkMatch.All" aria-current="page">
+                        Ví tiền
+                    </NavLink>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <NavLink class="nav-link dropdown-toggle" href="/form" ActiveClass="text-danger"
+                             Match="NavLinkMatch.Prefix" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Component
+                    </NavLink>
+                    <ul class="dropdown-menu">
+                        @* <li>
+                            <NavLink class="dropdown-item" href="/component/car" ActiveClass="text-danger"
+                                     Match="NavLinkMatch.All">One Car</NavLink>
+                        </li> *@
+                        <li>
+                            <NavLink class="dropdown-item" href="/component/carlist" ActiveClass="text-danger"
+                                     Match="NavLinkMatch.All">CarList</NavLink>
+                        </li>
+                    </ul>
+                </li>
             </ul>
             <form class="d-flex" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />

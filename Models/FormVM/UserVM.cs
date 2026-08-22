@@ -22,12 +22,6 @@ public class UserVM
     )]
     public string Phone { get; set; } = string.Empty;
 
-
-
-
-
-
-
     // Điều khoản và điều kiện
     [Range(
         typeof(bool),

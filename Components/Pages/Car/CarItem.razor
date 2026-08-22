@@ -1,0 +1,47 @@
+@page "/change-car"
+
+<PageTitle>Đổi màu xe</PageTitle>
+
+<div class="container">
+    <div class="row justify-content-center align-content-center my-auto">
+        <div class="col-9">
+            <img src="@carModel.Img" class="img-fluid" alt="">
+            <h3 class="text-center">@carModel.Name</h3>
+        </div>
+        <div class="col-3 d-flex flex-column">
+            @foreach (CarVM car in lstColor)
+            {
+                <button class="btn w-25 h-25" @onclick="() => ChangeColor(car)">
+                    <img src="@car.Icon" class="img-fluid rounded-circle" alt="">
+                </button>
+            }
+        </div>
+    </div>
+</div>
+
+@* để UI thay đổi cần State thay đổi *@
+@code {
+    private CarVM carModel = new CarVM
+    {
+        Name = "black car",
+        Img = "/imgs/CarBasic/Cars/black-car.jpg",
+        Icon = "/imgs/CarBasic/icons/icon-black.jpg",
+
+    };
+    List<string> colorNames = new() { "black", "red", "silver", "steel" };
+
+    // Tự build danh sách CarVM từ tên màu, khỏi phải gõ tay từng object
+    private List<CarVM> lstColor => colorNames.Select(c => new CarVM
+    {
+        Name = c,
+        Img = $"/imgs/CarBasic/Cars/{c}-car.jpg",
+        Icon = $"/imgs/CarBasic/icons/icon-{c}.jpg"
+    }).ToList();
+
+    private void ChangeColor(CarVM car)
+    {
+        carModel.Name = $"{car.Name} car";
+        carModel.Img = car.Img;
+        carModel.Icon = car.Icon;
+    }
+}
