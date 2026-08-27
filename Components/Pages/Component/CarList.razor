@@ -1,5 +1,5 @@
 @page "/component/carlist"
-
+@inject IJSRuntime JS
 <PageTitle>CarList</PageTitle>
 
 <div class="container">
@@ -7,22 +7,27 @@
         @foreach (CarVM item in lstColor)
         {
             <div class="col-3">
-                <CarItem CarData="@item" />
+                <CarItem CarData="@item" viewDetail="ChangeColor" />
             </div>
         }
+
     </div>
+
 </div>
+<ModalCar car="@curCar" />
 @* hiện thị 4 chiếc xe *@
 
 
 @code {
+    public CarVM curCar = new();
+    List<string> colorNames = new() { "black", "red", "silver", "steel" };
+
     @* danh sách 4 chiếc xe *@
     private CarVM carModel = new CarVM
     {
         Name = "black car",
         Img = "/imgs/CarBasic/Cars/black-car.jpg",
     };
-    List<string> colorNames = new() { "black", "red", "silver", "steel" };
 
     // Tự build danh sách CarVM từ tên màu, khỏi phải gõ tay từng object
     private List<CarVM> lstColor => colorNames.Select(c => new CarVM
@@ -31,10 +36,10 @@
         Img = $"/imgs/CarBasic/Cars/{c}-car.jpg",
     }).ToList();
 
-    private void ChangeColor(CarVM car)
+    public async Task ChangeColor(CarVM car)
     {
-        carModel.Name = $"{car.Name} car";
-        carModel.Img = car.Img;
-        carModel.Icon = car.Icon;
+        curCar = car; // <-- gán curCar
+        StateHasChanged(); // đảm bảo modal render dữ liệu mới TRƯỚC khi show
+        await JS.InvokeVoidAsync("showCarModal");
     }
 }

@@ -6,3 +6,10 @@ window.focusElement = (id) => {
     el.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 };
+
+// display modal car
+window.showCarModal = () => {
+    const modalEl = document.getElementById("modalId");
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modal.show();
+};

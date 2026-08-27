@@ -6,19 +6,27 @@
     <div class="card" style="width: 18rem;">
         <img src="@CarData.Img" class="card-img-top" alt="...">
         <div class="card-body">
-            <p class="card-text">@CarData.Name</p>
+            <h4 class="card-title">@CarData.Name</h4>
+            <button class="btn btn-outline-success" @onclick="() => viewDetail.InvokeAsync(CarData)">
+                view detail
+            </button>
         </div>
     </div>
+
 </div>
 
 @* để UI thay đổi cần State thay đổi *@
 @code {
-    private CarVM CarModel = new CarVM
+    @* private CarVM CarModel = new CarVM
     {
         Name = "black car",
         Img = "/imgs/CarBasic/Cars/black-car.jpg",
-    };
+    }; *@
 
     [Parameter]
     public CarVM CarData { get; set; }
+
+    [Parameter]
+    public EventCallback<CarVM> viewDetail { get; set; }
+
 }
