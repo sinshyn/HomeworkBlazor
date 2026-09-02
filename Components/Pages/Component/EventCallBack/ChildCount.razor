@@ -1,0 +1,24 @@
+<button class="btn btn-success text-center fw-bold fs-4 w-100 rounded-pill" @onclick="tangAsync">Tang</button>
+
+<input type="text" name="" id="" @bind="ten">
+<button class="btn btn-info" @onclick="SendMessageAsync">Gui</button>
+
+@code {
+    private string ten { get; set; }
+    //khai báo Parameter để hứng
+    [Parameter]
+    public EventCallback tang { get; set; }
+
+    //tao ham trung gian
+    private async Task tangAsync()
+    {
+        await tang.InvokeAsync();
+    }
+
+    [Parameter]
+    public EventCallback<string> chao { get; set; }
+    private async Task SendMessageAsync()
+    {
+        await chao.InvokeAsync(ten);
+    }
+}

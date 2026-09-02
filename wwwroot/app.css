@@ -1,3 +1,7 @@
 :root{
      --primary-color: rgb(189, 93, 56);
 }
+
+.not{
+     color: coral;
+}

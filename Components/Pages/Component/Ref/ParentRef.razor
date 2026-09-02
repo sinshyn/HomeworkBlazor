@@ -1,0 +1,24 @@
+@page "/component/ref"
+@* cha gọi con để hiển thị
+con: số, button tăng giảm hàm thay đổi state điều đặt ở thằng con *@
+
+<div class="container text-center">
+    @* cha phải bật tham chiếu đến con *@
+    <ChildRef @ref="child" />
+    <button class="btn btn-outline-warning" @onclick="DecreaseChild">giảm</button>
+    <button class="btn btn-danger" @onclick="ResetChild">Reset</button>
+</div>
+
+
+@code {
+    private ChildRef child;
+
+    private void ResetChild()
+    {
+        child.SetZero();
+    }
+    private void DecreaseChild()
+    {
+        child.Decrease();
+    }
+}

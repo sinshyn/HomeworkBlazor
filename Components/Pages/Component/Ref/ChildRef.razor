@@ -1,0 +1,24 @@
+<h4>
+    @count
+</h4>
+<button class="btn btn-outline-success" @onclick="Increase">tăng</button>
+
+  
+@code {
+    private int count { get; set; }
+
+    public void Increase()
+    {
+        count++;
+    }
+    public void Decrease()
+    {
+        count--;
+        StateHasChanged();
+    }
+    public void SetZero()
+    {
+        count = 0;
+        StateHasChanged();
+    }
+}

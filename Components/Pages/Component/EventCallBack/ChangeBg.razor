@@ -1,0 +1,22 @@
+@page "/component/event-callback/changebg"
+
+<PageTitle>Change Background</PageTitle>
+
+<div class="container">
+    <h1 class="text-center">Change Background</h1>
+    <div class="card w-75 m-auto" style="height: 500px; background-color: @bgColor;">
+    </div>
+    <div class="text-center">
+        <ChangBgColor OnChangeColor="ChangeColor" lColor="lstColor" />
+    </div>
+</div>
+
+
+@code {
+    List<string> lstColor = new() { "red", "coral", "black", "blue", "pink", "cyan", "brown", "cadetblue" };
+    private string bgColor { get; set; } = "pink";
+    private void ChangeColor(string value)
+    {
+        bgColor = value;
+    }
+}

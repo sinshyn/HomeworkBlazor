@@ -1,0 +1,23 @@
+@foreach (var color in lColor)
+{
+    <button class="btn mx-2 mt-3 text-white fw-bold" @onclick='() => ChangeColorAsync(color)'
+            style="background-color: @color;">
+        @color
+    </button>
+}
+
+@code {
+
+    @* List<string> lstColor = new() { "red", "coral", "black", "blue", "pink", "cyan", "brown", "cadetblue" }; *@
+
+    [Parameter]
+    public EventCallback<string> OnChangeColor { get; set; }
+
+    private async Task ChangeColorAsync(string value)
+    {
+        await OnChangeColor.InvokeAsync(value);
+    }
+
+    [Parameter]
+    public List<string> lColor { get; set; }
+}

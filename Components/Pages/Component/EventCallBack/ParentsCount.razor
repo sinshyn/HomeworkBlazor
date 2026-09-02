@@ -1,0 +1,24 @@
+@page "/component/event-callback"
+
+<div class="container">
+    <h1 class="text-center mt-5">TONG: @count </h1>
+    @* button tang *@
+    @* khi truyền thông tin/function vào component thì component phải hứng giá trị = Parameter *@
+    <ChildCount tang="Increase" chao="SayHi" />
+<h3 class="text-info">@message</h3>
+</div>
+
+
+@code {
+    private int count { get; set; }
+    private string message;
+    private void Increase()
+    {
+        count++;
+    }
+
+    private void SayHi(string name)
+    {
+        message = $"hello {name}";
+    }
+}
