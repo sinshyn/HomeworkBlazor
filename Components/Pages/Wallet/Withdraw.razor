@@ -1,0 +1,23 @@
+@* 
+<div class="text-center">
+    <input type="number" name="" id="">
+    <button class="btn btn-warning" @onclick='() => DepositAsync(decimal num)'>Withdraw</button>
+
+</div>
+@code
+{
+    [Parameter]
+    public EventCallback OnDeposit { get; set; }
+    private async Task DepositAsync(decimal num)
+    {
+        await OnDeposit.InvokeAsync(num);
+    }
+} *@
+
+<!-- Button mở Modal -->
+<button type="button" 
+        class="btn btn-danger"
+        data-bs-toggle="modal" 
+        data-bs-target="#withdrawModal">
+    Withdraw
+</button>

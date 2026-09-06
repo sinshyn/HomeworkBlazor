@@ -2,38 +2,55 @@
 @inject IJSRuntime JS
 <PageTitle>CarList</PageTitle>
 
-<div class="container">
+<div class="container-fluid mt-5">
     <div class="row">
         @foreach (CarVM item in lstColor)
         {
             <div class="col-3">
-                <CarItem CarData="@item" viewDetail="ChangeColor" />
+                <CarItem CarData="@item" viewDetail="ChangeColor" AddCart="AddToCart" />
             </div>
         }
 
     </div>
+    @* view detail *@
+    <ModalCar car="@curCar" />
 
+    @* hiện thị giỏ hàng *@
+    <CartList giohang="@lstCart" />
 </div>
-<ModalCar car="@curCar" />
-@* hiện thị 4 chiếc xe *@
 
 
 @code {
     public CarVM curCar = new();
+    @* hiện thị 4 chiếc xe *@
     List<string> colorNames = new() { "black", "red", "silver", "steel" };
-
+    List<CarVM> lstCart = new()
+{
+    new CarVM
+    {
+        Name = "black car",
+        Img = "/imgs/CarBasic/Cars/black-car.jpg"
+    },
+    new CarVM
+    {
+        Name = "red car",
+        Img = "/imgs/CarBasic/Cars/red-car.jpg"
+    }
+};
     @* danh sách 4 chiếc xe *@
     private CarVM carModel = new CarVM
     {
         Name = "black car",
-        Img = "/imgs/CarBasic/Cars/black-car.jpg",
+        Img = "/imgs/CarBasic/Cars/black-car.jpg"
     };
 
     // Tự build danh sách CarVM từ tên màu, khỏi phải gõ tay từng object
     private List<CarVM> lstColor => colorNames.Select(c => new CarVM
     {
-        Name = c,
+        Name = $"{c} Car",
         Img = $"/imgs/CarBasic/Cars/{c}-car.jpg",
+        Quantity = 1,
+        Price = 500000
     }).ToList();
 
     public async Task ChangeColor(CarVM car)
@@ -41,5 +58,10 @@
         curCar = car; // <-- gán curCar
         StateHasChanged(); // đảm bảo modal render dữ liệu mới TRƯỚC khi show
         await JS.InvokeVoidAsync("showCarModal");
+    }
+
+    private void AddToCart(CarVM car)
+    {
+        lstCart.Add(car);
     }
 }

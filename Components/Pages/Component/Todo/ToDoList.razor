@@ -1,0 +1,89 @@
+@* cha: danh sách todo
+con: input nhap todo + button add *@
+
+@page "/component/todolist"
+<PageTitle>Todo List</PageTitle>
+
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-0 py-3">
+            <h2 class="mb-0 fw-bold text-center">Todo List</h2>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-danger">
+                        <tr>
+                            <th style="width: 10px;">Status</th>
+                            <th class="text-center">Activity</th>
+                            <th class="text-center" style="width: 100px;">Chức năng</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in lstTodo)
+                        {
+                            <tr>
+                                <td style="width: 10px;">
+                                    <input @onchange="() => CheckAction(item)" type="checkbox" checked="@item.Status" />
+                                </td>
+                                <td class="text-center">
+                                    @item.Action
+                                </td>
+                                <td class="text-center" style="width: 50px;">
+                                    <button @onclick="() => RemoveAction(item)" class="btn btn-danger"><i
+                                        class="fa-solid fa-trash-can"></i></button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <ToDoAdd ThemHoatDong="AddAction" />
+
+        <div class="mt-5">
+            <h4 class="text-warning">Thống kê</h4>
+            <p>Total: @lstTodo.Count</p>
+            <p>
+                Done: @lstTodo.Count(x => x.Status)
+                <button @onclick="RemoveDoneAction" class="btn btn-warning">clear</button>
+            </p>
+            <p>Not done: @lstTodo.Count(x => !x.Status)</p>
+        </div>
+    </div>
+
+
+
+
+@code {
+    public List<TodoItem> lstTodo = new()
+    {
+        new TodoItem { Action = "tap the duc", Status = false },
+        new TodoItem { Action = "đạp xe", Status = true },
+    };
+
+    private void AddAction(string action)
+    {
+        if (!string.IsNullOrWhiteSpace(action))
+        {
+            lstTodo.Add(new TodoItem { Action = action, Status = false });
+        }
+    }
+    private void CheckAction(TodoItem item)
+    {
+        item.Status = !item.Status;
+    }
+    private void RemoveAction(TodoItem item)
+    {
+        lstTodo.Remove(item);
+    }
+    private void RemoveDoneAction()
+    {
+        lstTodo.RemoveAll(x => x.Status);
+    }
+}

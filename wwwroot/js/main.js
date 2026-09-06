@@ -13,3 +13,11 @@ window.showCarModal = () => {
     const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
     modal.show();
 };
+
+
+// show modal nap-rut tien
+window.showTransactionModal = () => {
+    const modalEl = document.getElementById("transactionModal");
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modal.show();
+};

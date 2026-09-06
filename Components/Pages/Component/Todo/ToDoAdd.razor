@@ -1,0 +1,22 @@
+<EditForm Model="this" OnValidSubmit="AddAsync">
+    <div class="input-group mt-4">
+        <input @bind="act" @bind:event="oninput" type="text" class="form-control">
+        <button type="submit" class="btn btn-success w-25">Add</button>
+    </div>
+</EditForm>
+
+@code {
+    private string? act;
+
+    [Parameter]
+    public EventCallback<string> ThemHoatDong { get; set; }
+
+    private async Task AddAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(act))
+        {
+            await ThemHoatDong.InvokeAsync(act);
+            act = string.Empty; // clear input sau khi submit
+        }
+    }
+}

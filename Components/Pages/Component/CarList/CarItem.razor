@@ -1,0 +1,39 @@
+@page "/component/car"
+
+<PageTitle>CarItem</PageTitle>
+
+<div class="card">
+    <img src="@CarData.Img" class="card-img-top" alt="...">
+    <div class="card-body">
+        <h4 class="card-title">@CarData.Name</h4>
+        <button class="btn btn-outline-info" @onclick="() => viewDetail.InvokeAsync(CarData)">
+            view detail
+        </button>
+        <button class="btn btn-outline-success" @onclick="AddCartAsync">
+            Add to cart
+        </button>
+    </div>
+</div>
+
+@* để UI thay đổi cần State thay đổi *@
+@code {
+    @* private CarVM CarModel = new CarVM
+    {
+        Name = "black car",
+        Img = "/imgs/CarBasic/Cars/black-car.jpg",
+    }; *@
+
+    [Parameter]
+    public CarVM CarData { get; set; }
+
+    [Parameter]
+    public EventCallback<CarVM> viewDetail { get; set; }
+
+    [Parameter]
+    public EventCallback<CarVM> AddCart { get; set; }
+    private async Task AddCartAsync()
+    {
+        await AddCart.InvokeAsync(CarData);
+    }
+
+}

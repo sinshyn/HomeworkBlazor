@@ -1,7 +1,75 @@
 @page "/my-wallet"
+@inject IJSRuntime JS
 <PageTitle>My Wallet</PageTitle>
 
 <div class="container">
+    <div class="text-center">
+        <h1>
+            My Wallet
+        </h1>
+        <h2 class="text-success">
+            $@balance
+        </h2>
+        @* <Deposit OnDeposit="HandleDeposit" />
+        <Withdraw OnWithdraw="HandleWithdraw" />
+        <History Transactions="transactions" /> *@
+    </div>
+    <!-- Button mở Modal -->
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#transactionModal">
+        transactionModal
+    </button>
 
-
+    <ModalWallet transaction="trans" />
 </div>
+
+
+@code {
+    private decimal balance { get; set; } = 0;
+
+    public TransactionVM trans = new TransactionVM();
+    public async Task ShowModalTrans(TransactionVM action)
+    {
+        trans = action;
+        StateHasChanged(); // đảm bảo modal render dữ liệu mới TRƯỚC khi show
+        await JS.InvokeVoidAsync("showTransactionModal");
+    }
+
+}
+
+
+
+
+@*
+private List<Transaction> transactions = new();
+    private async Task HandleDeposit(decimal amount)
+    {
+        if (amount <= 0)
+        {
+            await JS.InvokeVoidAsync("showAlert", "Lỗi", "Số tiền phải là số dương!", "error");
+            return;
+        }
+
+        balance += amount;
+        transactions.Add(new Transaction { Type = "Deposit", Amount = amount, Time = DateTime.Now });
+        await JS.InvokeVoidAsync("showAlert", "Thành công", $"Đã nạp ${amount}", "success");
+    }
+
+
+    private async Task HandleWithdraw(decimal amount)
+    {
+        if (amount <= 0)
+        {
+            await JS.InvokeVoidAsync("showAlert", "Lỗi", "Số tiền phải là số dương!", "error");
+            return;
+        }
+
+        if (amount > balance)
+        {
+            await JS.InvokeVoidAsync("showAlert", "Lỗi", "Số dư không đủ!", "error");
+            return;
+        }
+
+        balance -= amount;
+        transactions.Add(new Transaction { Type = "Withdraw", Amount = amount, Time = DateTime.Now });
+        await JS.InvokeVoidAsync("showAlert", "Thành công", $"Đã rút ${amount}", "success");
+    } *@
