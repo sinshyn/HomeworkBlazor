@@ -19,10 +19,18 @@
                 <img src="@item.Img" alt="" style="width: 150px; height: 100px;">
             </td>
             <td>@item.Name</td>
-            <td>@item.Quantity</td>
+            <td>
+                <button class="btn btn-warning" @onclick="() => OnQuantityChangedAsync(item, -1)">
+                    -
+                </button>
+                @item.Quantity
+                <button class="btn btn-success" @onclick="() => OnQuantityChangedAsync(item, +1)">
+                    +
+                </button>
+            </td>
             <td>@item.Price</td>
             <td>@item.Total</td>
-            <td><button class="btn btn-danger">delete</button></td>
+            <td><button class="btn btn-danger" @onclick="() => OnRemoveAsync(item)">delete</button></td>
 
         </tr>
     }
@@ -32,5 +40,18 @@
     [Parameter]
     public List<CarVM> giohang { get; set; }
 
-  
+    [Parameter]
+    public EventCallback<(CarVM item, int num)> OnQuantityChanged { get; set; }
+    private async Task OnQuantityChangedAsync(CarVM item, int num)
+    {
+        await OnQuantityChanged.InvokeAsync((item, num));
+    }
+
+    [Parameter]
+    public EventCallback<CarVM> OnRemove { get; set; }
+    private async Task OnRemoveAsync(CarVM item)
+    {
+        await OnRemove.InvokeAsync(item);
+    }
+    
 }

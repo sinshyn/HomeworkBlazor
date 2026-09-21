@@ -1,0 +1,61 @@
+@page "/lifecycle/first"
+@using homework.Models.DTOS
+@inject HttpClient _http;
+
+<PageTitle>First Life Cycle</PageTitle>
+
+<div class="container">
+    <h2>@message</h2>
+    @if (rate is null)
+    {
+        <p>Đang tải tỷ giá...</p>
+    }
+    else
+    {
+        <p>Tổng cộng @rate.ConversionRates.Count loại tiền (cập nhật: @rate.TimeLastUpdateUtc)</p>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã tiền</th>
+                    <th>1 @rate.BaseCode =</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int stt = 1;
+                }
+                @foreach (var item in rate.ConversionRates.OrderBy(x => x.Key))
+                {
+                    <tr>
+                        <td>@(stt++)</td>
+                        <td>@item.Key</td>
+                        <td>@item.Value.ToString("N4")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    private string message = "hihi";
+    @* private List<ExchangeRateResponse> lstRate = new List<ExchangeRateResponse>(); *@
+    private ExchangeRateResponse? rate;
+
+    @* khởi tạo - chạy khi lần đầu component được render (xuất hiện) *@
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("component mới render");
+        message = "haha + giao diện mới render";
+    }
+
+    @* khi gọi bên ngoài thì phải có bước đợi *@
+    protected override async Task OnInitializedAsync()
+    {
+        rate = await _http.GetFromJsonAsync<ExchangeRateResponse>(
+            "https://v6.exchangerate-api.com/v6/e736bd8494d797ca2189fb9f/latest/USD");
+        Console.WriteLine("số lượng API là: " + rate.ConversionRates.Count);
+    }
+}

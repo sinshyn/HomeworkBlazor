@@ -1,4 +1,5 @@
 @page "/component/carlist"
+@using System.Globalization
 @inject IJSRuntime JS
 <PageTitle>CarList</PageTitle>
 
@@ -16,7 +17,7 @@
     <ModalCar car="@curCar" />
 
     @* hiện thị giỏ hàng *@
-    <CartList giohang="@lstCart" />
+    <CartList giohang="@lstCart" OnQuantityChanged="@ChangeQuanti" OnRemove="@RemoveCar" />
 </div>
 
 
@@ -24,19 +25,8 @@
     public CarVM curCar = new();
     @* hiện thị 4 chiếc xe *@
     List<string> colorNames = new() { "black", "red", "silver", "steel" };
-    List<CarVM> lstCart = new()
-{
-    new CarVM
-    {
-        Name = "black car",
-        Img = "/imgs/CarBasic/Cars/black-car.jpg"
-    },
-    new CarVM
-    {
-        Name = "red car",
-        Img = "/imgs/CarBasic/Cars/red-car.jpg"
-    }
-};
+    List<CarVM> lstCart = new();
+
     @* danh sách 4 chiếc xe *@
     private CarVM carModel = new CarVM
     {
@@ -62,6 +52,37 @@
 
     private void AddToCart(CarVM car)
     {
-        lstCart.Add(car);
+        //tìm xe đã có trong giỏ hàng theo name
+        var existing = lstCart.FirstOrDefault(c => c.Name == car.Name);
+        if (existing != null)
+        {
+            existing.Quantity += 1;
+
+        }
+        else
+        {
+            var newItem = new CarVM
+            {
+                Name = car.Name,
+                Img = car.Img,
+                Icon = car.Icon,
+                Price = car.Price,
+                Quantity = 1
+            };
+            lstCart.Add(newItem);
+        }
+        StateHasChanged();
     }
+    private void ChangeQuanti((CarVM item, int num) data)
+    {
+        data.item.Quantity += data.num;
+        if (data.item.Quantity <= 0)
+            RemoveCar(data.item);
+    }
+
+    private void RemoveCar(CarVM item)
+    {
+        lstCart.Remove(item);
+    }
+
 }

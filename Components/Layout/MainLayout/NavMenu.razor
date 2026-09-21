@@ -51,7 +51,19 @@
                         Ví tiền
                     </NavLink>
                 </li>
-
+                <li class="nav-item dropdown">
+                    <NavLink class="nav-link dropdown-toggle" href="/lifecycle" ActiveClass="text-danger"
+                             Match="NavLinkMatch.Prefix" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Life Cycle
+                    </NavLink>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <NavLink class="dropdown-item" href="/lifecycle/first" ActiveClass="text-danger"
+                                     Match="NavLinkMatch.All">First Life Cycle</NavLink>
+                        </li>
+                    </ul>
+                </li>
+                
                 <li class="nav-item dropdown">
                     <NavLink class="nav-link dropdown-toggle" href="/form" ActiveClass="text-danger"
                              Match="NavLinkMatch.Prefix" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -75,8 +87,8 @@
                                      Match="NavLinkMatch.All">Ref</NavLink>
                         </li>
                         <li>
-                            <NavLink class="dropdown-item" href="/component/event-callback/changebg" ActiveClass="text-danger"
-                                     Match="NavLinkMatch.All">Change Background</NavLink>
+                            <NavLink class="dropdown-item" href="/component/event-callback/changebg"
+                                     ActiveClass="text-danger" Match="NavLinkMatch.All">Change Background</NavLink>
                         </li>
                         <li>
                             <NavLink class="dropdown-item" href="/component/todolist" ActiveClass="text-danger"
