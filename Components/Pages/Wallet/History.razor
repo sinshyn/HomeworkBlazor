@@ -1,49 +1,46 @@
+<div class="my-3">
+    <h3 class="text-white">Transaction History</h3>
+    <div class="table-responsive rounded-5">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="px-4">Type</th>
+                    <th>Value</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
 
+            <tbody>
+                @foreach (var item in transactions)
+                {
+                    <tr class="@(item.TypeTrans == TransType.Deposit ? "table-success" : "table-danger")">
+                        <td class="px-4">
+                            <span
+                                class="badge @(item.TypeTrans == TransType.Deposit ? "bg-success-subtle text-success" : "bg-danger-subtle text-danger")">
+                                @item.TypeTrans
+                            </span>
+                        </td>
 
+                        <td class="fw-semibold @(item.TypeTrans == TransType.Deposit ? "text-success" : "text-danger")">
+                            @(item.TypeTrans == TransType.Deposit ? "+" : "-")@item.Amount
+                        </td>
 
-<div class="container mt-4">
-    <div class="card shadow-sm border-0">
-        
-        <div class="card-header bg-white border-0 py-3">
-            <h2 class="mb-0 fw-bold">Transaction History</h2>
-        </div>
-
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="px-4">Type</th>
-                            <th>Value</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr>
-                            <td class="px-4">
-                                <span class="badge bg-success-subtle text-success">
-                                    Deposit
-                                </span>
-                            </td>
-
-                            <td class="fw-semibold text-success">
-                                +$500
-                            </td>
-
-                            <td class="text-muted">
-                                @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
+                        <td class="text-muted">
+                            @item.Time
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
 
+
+
+
+
 @code {
+  
     [Parameter]
-    public TransactionVM? transaction { get; set; }
+    public List<TransactionVM> transactions { get; set; } = new();
 }

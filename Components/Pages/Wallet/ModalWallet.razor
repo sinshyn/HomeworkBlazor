@@ -6,7 +6,7 @@
             <!-- Header -->
             <div class="modal-header">
                 <h5 class="modal-title fw-bold" id="transactionModalLabel">
-                    @transaction.Type
+                    @transaction.TypeTrans
                 </h5>
 
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
@@ -22,7 +22,7 @@
                     </label>
 
                     <div class="input-group">
-                        <input type="number" @bind=transaction.Amount class="form-control" id="withdrawAmount"
+                        <input type="number" @bind="transaction.Amount" class="form-control" id="withdrawAmount"
                                placeholder="Enter amount" min="1">
 
                         <span class="input-group-text">
@@ -39,8 +39,9 @@
                     Cancel
                 </button>
 
-                <button type="button" class="btn btn-danger">
-                    @transaction.Type
+                <button @onclick="OnConfirmAsync" type="button"
+                        class="btn @(transaction.TypeTrans == TransType.Deposit ? "btn-success" : "btn-danger")">
+                    @transaction.TypeTrans
                 </button>
             </div>
 
@@ -52,5 +53,12 @@
 
 @code {
     [Parameter]
-    public TransactionVM? transaction { get; set; }
+    public TransactionVM transaction { get; set; } = new TransactionVM();
+
+    [Parameter]
+    public EventCallback<TransactionVM> OnConfirm { get; set; }
+    private async Task OnConfirmAsync()
+    {
+        await OnConfirm.InvokeAsync(transaction);
+    }
 }

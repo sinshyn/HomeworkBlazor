@@ -21,3 +21,10 @@ window.showTransactionModal = () => {
     const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
     modal.show();
 };
+
+//ẩn modaltransaction
+window.hideTransactionModal = () => {
+    const modalEl = document.getElementById('transactionModal'); // đổi đúng id modal của bạn
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    modal?.hide();
+};

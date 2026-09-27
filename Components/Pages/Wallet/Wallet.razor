@@ -2,74 +2,94 @@
 @inject IJSRuntime JS
 <PageTitle>My Wallet</PageTitle>
 
-<div class="container">
+<div class="container bg-black p-5">
     <div class="text-center">
-        <h1>
+        <h1 class="text-white">
             My Wallet
         </h1>
-        <h2 class="text-success">
+        <h2 class="text-warning fw-bold my-3">
             $@balance
         </h2>
-        @* <Deposit OnDeposit="HandleDeposit" />
-        <Withdraw OnWithdraw="HandleWithdraw" />
-        <History Transactions="transactions" /> *@
-    </div>
-    <!-- Button mở Modal -->
-    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#transactionModal">
-        transactionModal
-    </button>
+        <Deposit OnDeposit="() => ShowModalTrans(TransType.Deposit)" />
+        <Withdraw OnWithdraw="() => ShowModalTrans(TransType.Withdraw)" />
 
-    <ModalWallet transaction="trans" />
+        <History transactions="lstTrans" />
+    </div>
+    
+ 
+    <ModalWallet transaction="tran" OnConfirm="ConfirmRequest" />
 </div>
 
 
 @code {
     private decimal balance { get; set; } = 0;
+    private List<TransactionVM> lstTrans = new();
+    public TransactionVM tran = new TransactionVM();
+    
 
-    public TransactionVM trans = new TransactionVM();
-    public async Task ShowModalTrans(TransactionVM action)
+
+    //show modal
+    public async Task ShowModalTrans(TransType kind)
     {
-        trans = action;
+        Console.WriteLine(kind);
+        tran = new TransactionVM
+        {
+            TypeTrans = kind
+        };
         StateHasChanged(); // đảm bảo modal render dữ liệu mới TRƯỚC khi show
         await JS.InvokeVoidAsync("showTransactionModal");
     }
 
+    //check số tiền
+    public bool CheckDecimal(string input, out decimal result)
+    {
+        bool isDecimal = decimal.TryParse(input, out result);
+        return isDecimal && result > 0;
+    }
+
+
+    //xử lý nạp/rút tiền
+    private async Task ConfirmRequest(TransactionVM request)
+    {
+        bool isValid = CheckDecimal(request.Amount, out decimal amount);
+        if (!isValid)
+        {
+            await JS.InvokeVoidAsync("showAlert", "Lỗi", "Số tiền không hợp lệ", "error");
+            return;
+        }
+        if (request.TypeTrans == TransType.Withdraw && amount > balance)
+        {
+            await JS.InvokeVoidAsync("showAlert", "Lỗi", "Số dư không đủ", "error");
+            return;
+        }
+
+        bool confirmed = await JS.InvokeAsync<bool>("showConfirm", "Xác nhận",
+            request.TypeTrans == TransType.Deposit
+                ? $"Nạp {amount:N0}đ vào ví?"
+                : $"Rút {amount:N0}đ từ ví?");
+
+        if (!confirmed) return;
+
+       
+        balance += request.TypeTrans == TransType.Deposit ? amount : -amount;
+
+        lstTrans.Add(new TransactionVM
+        {
+            TypeTrans = request.TypeTrans,
+            Amount = amount.ToString(),
+            Time = DateTime.Now,
+        });
+
+        await JS.InvokeVoidAsync("showAlert", "Thành công",
+            request.TypeTrans == TransType.Deposit ? "Nạp tiền thành công!" : "Rút tiền thành công!",
+            "success");
+        await JS.InvokeVoidAsync("hideTransactionModal");
+        StateHasChanged();
+    
+    }
 }
 
 
 
 
-@*
-private List<Transaction> transactions = new();
-    private async Task HandleDeposit(decimal amount)
-    {
-        if (amount <= 0)
-        {
-            await JS.InvokeVoidAsync("showAlert", "Lỗi", "Số tiền phải là số dương!", "error");
-            return;
-        }
 
-        balance += amount;
-        transactions.Add(new Transaction { Type = "Deposit", Amount = amount, Time = DateTime.Now });
-        await JS.InvokeVoidAsync("showAlert", "Thành công", $"Đã nạp ${amount}", "success");
-    }
-
-
-    private async Task HandleWithdraw(decimal amount)
-    {
-        if (amount <= 0)
-        {
-            await JS.InvokeVoidAsync("showAlert", "Lỗi", "Số tiền phải là số dương!", "error");
-            return;
-        }
-
-        if (amount > balance)
-        {
-            await JS.InvokeVoidAsync("showAlert", "Lỗi", "Số dư không đủ!", "error");
-            return;
-        }
-
-        balance -= amount;
-        transactions.Add(new Transaction { Type = "Withdraw", Amount = amount, Time = DateTime.Now });
-        await JS.InvokeVoidAsync("showAlert", "Thành công", $"Đã rút ${amount}", "success");
-    } *@

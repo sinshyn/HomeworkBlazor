@@ -1,5 +1,12 @@
-<button class="btn btn-success">Deposit</button>
+<button class="btn btn-success" @onclick="OnDepositAsync">Deposit</button>
 
 @code {
-    
+    [Parameter]
+    public EventCallback OnDeposit { get; set; }
+
+    private async Task OnDepositAsync()
+    {
+        await OnDeposit.InvokeAsync();
+    }
+
 }
