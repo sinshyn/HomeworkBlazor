@@ -1,7 +1,7 @@
-namespace homework.Models.DTOS;
+namespace homework.Models.DTOS.ExchangeDto;
 using System.Text.Json.Serialization;
 
-public class ExchangeRateResponse
+public class ExchangeRateResponseDto
 {
     [JsonPropertyName("result")]
     public string Result { get; set; } = "";

@@ -1,0 +1,43 @@
+@page "/lifecycle/render"
+
+<div>
+    <input @bind-value="@message" type="text" name="" id="">
+    <h1>@message</h1>
+    <h2>số lần render giao diện: @count</h2>
+    <button @onclick="ChangeMessage" class="btn btn-success rounded-pill">Change Message</button>
+</div>
+
+@code {
+    public string message = "welcome to";
+    public string oldMessage;
+    public int count = 1;
+
+    private void ChangeMessage()
+    {
+        oldMessage = message;
+    }
+
+    protected override bool ShouldRender()
+    {
+        if (oldMessage != message)
+        {
+            count++;
+            return true;
+        }
+        else
+            return false;
+    }
+    protected override void OnAfterRender(bool first)
+    {
+        //sau khi render xong thi update lai message
+        oldMessage = message;
+        if (first)
+        {
+            Console.WriteLine("Render lần đầu");
+        }
+        else
+        {
+            Console.WriteLine($"Render lần {count}");
+        }
+    }
+}

@@ -1,0 +1,71 @@
+@page "/lifecycle/product/{id:int}"
+@using homework.Models.DTOS.LifeCycleProductDtos
+
+@inject HttpClient _http;
+
+@if (pro == null)
+{
+    <p class="loading">Đang tải...</p>
+}
+else
+{
+    <div class="product-detail">
+        <div class="product-gallery">
+            <img class="main-image" src="@(selectedImage ?? pro.Images?.FirstOrDefault() ?? pro.Thumbnail)"
+                 alt="@pro.Title" />
+
+            @if (pro.Images != null && pro.Images.Any())
+            {
+                <div class="thumbs">
+                    @foreach (var img in pro.Images)
+                    {
+                        <img src="@img" alt="@pro.Title" class="@(img == (selectedImage ?? pro.Images.First()) ? "active" : "")"
+                             @onclick="() => selectedImage = img" />
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="product-info">
+            <span class="category">@pro.Category</span>
+            <h1>@pro.Title</h1>
+            <p class="brand">Thương hiệu: <strong>@pro.Brand</strong></p>
+
+            <div class="rating">
+                <span class="stars">★ @pro.Rating</span>
+                <span class="sku">Mã SP: #@pro.Id</span>
+            </div>
+
+            <div class="price-box">
+                <span class="price">$@((pro.Price * (1 - pro.DiscountPercentage / 100)).ToString("N2"))</span>
+                @if (pro.DiscountPercentage > 0)
+                {
+                    <span class="old-price">$@pro.Price</span>
+                    <span class="badge">-@pro.DiscountPercentage%</span>
+                }
+            </div>
+
+            <p class="description">@pro.Description</p>
+
+            <p class="stock @(pro.Stock > 0 ? "in" : "out")">
+                @(pro.Stock > 0 ? $"Còn hàng ({pro.Stock})" : "Hết hàng")
+            </p>
+
+            <div class="actions">
+                <button class="btn-primary" disabled="@(pro.Stock <= 0)">Thêm vào giỏ</button>
+                <button class="btn-outline">Mua ngay</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private string? selectedImage;
+    private ProductDto? pro;
+    protected override async Task OnInitializedAsync()
+    {
+        pro = await _http.GetFromJsonAsync<ProductDto>($"https://dummyjson.com/products/{Id}");
+    }
+}

@@ -1,0 +1,25 @@
+@page "/lifecycle/dispose"
+
+<div>
+    <h1>@count</h1>
+</div>
+
+@code {
+    public int count = 0;
+    Timer time;
+
+    protected override void OnInitialized()
+    {
+        //khi new thì tạo thêm 1 luồng mới
+        time = new Timer((state) =>
+        {
+            count++;
+            StateHasChanged();
+        }, null, 0, 1000);
+    }
+
+    
+    @* Thread: luồng 
+dotnet: mặc định 1 luồng
+ tạo luồng mới để không ảnh hưởng luồng xử lý khác*@
+}

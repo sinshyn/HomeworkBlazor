@@ -1,0 +1,65 @@
+@using homework.Models.DTOS.LifeCycleProductDtos
+<style>
+    .popup-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, .6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+
+    .popup-box {
+        position: relative;
+        background: #fff;
+        padding: 10px;
+        border-radius: 8px;
+        max-width: 360px;
+    }
+
+    .popup-box img {
+        width: 100%;
+        display: block;
+        border-radius: 4px;
+    }
+
+    .popup-close {
+        position: absolute;
+        top: -12px;
+        right: -12px;
+        width: 28px;
+        height: 28px;
+        border: none;
+        border-radius: 50%;
+        background: #fff;
+        cursor: pointer;
+        font-size: 18px;
+        line-height: 1;
+    }
+</style>
+
+@if (Show && Item != null)
+{
+    <div class="popup-overlay" @onclick="Close">
+        <div class="popup-box" @onclick:stopPropagation="true">
+            <button class="popup-close" @onclick="Close">×</button>
+            <img src="@Item.Thumbnail" alt="@Item.Title" class="mb-2" />
+        </div>
+    </div>  
+}
+@code {
+    [Parameter] public ProductDto? Item { get; set; }
+    [Parameter] public bool Show { get; set; }
+    [Parameter] public EventCallback<bool> ShowChanged { get; set; }
+
+    private async Task Close()
+    {
+        await ShowChanged.InvokeAsync(false);
+    }
+
+    protected override void OnParametersSet()
+    {
+        Console.WriteLine("OnParametersSet");
+    }
+}

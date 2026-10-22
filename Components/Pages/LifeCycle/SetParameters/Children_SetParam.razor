@@ -1,0 +1,39 @@
+@using Microsoft.AspNetCore.Components
+@using homework.Models.DTOS.LifeCycleProductDtos
+
+<div>
+    <b class="text-danger">Name ở con:</b> @ten.Name
+</div>
+
+@code {
+    [Parameter]
+    public SpecialNameDto ten { get; set; }
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("OnInitialized");
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("OnInitializedAsync");
+    }
+
+    //SetParametersAsync chạy trước khi render giao diện
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        Console.WriteLine("SetParametersAsync");
+        // trước khi gán giá trị cho ten
+        SpecialNameDto incoming = parameters.GetValueOrDefault<SpecialNameDto>("ten");
+
+        if (incoming?.Name == "hello")
+        {
+            incoming.Name = "xin chào";
+        }
+        await base.SetParametersAsync(parameters);
+    }
+
+    //chạy sau khi nhận được param
+    protected override void OnParametersSet()
+    {
+        Console.WriteLine("OnParametersSet");
+    }
+}
