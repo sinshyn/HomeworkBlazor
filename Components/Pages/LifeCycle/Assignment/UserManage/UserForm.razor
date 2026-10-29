@@ -1,0 +1,131 @@
+@using homework.Models.DTOS.UserDtos
+
+<style>
+    /* Sai và không focus: viền đỏ */
+    .form-control.invalid {
+        border-color: #dc3545;
+    }
+
+    /* Đang focus (đang nhập): về màu focus bình thường của Bootstrap */
+    .form-control.invalid:focus {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .25);
+    }
+
+    /* Thông báo lỗi màu đỏ */
+    .validation-message {
+        color: #dc3545;
+        font-size: .875rem;
+        margin-top: .25rem;
+    }
+
+    /* Đang focus vào ô thì ẩn thông báo lỗi ngay sau nó */
+    .form-control:focus~.validation-message {
+        display: none;
+    }
+</style>
+<h1> form người dùng</h1>
+<EditForm Model="formModel">
+    <DataAnnotationsValidator />
+    <div class="card mb-4">
+        <div class="card-header fw-bold">Thông tin cơ bản</div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="name" class="form-label">Họ Tên <span class="text-danger">*</span></label>
+                    <InputText @bind-Value="formModel.FullName" type="text" class="form-control" id="name"
+                               placeholder="Leanne Graham" />
+                    <ValidationMessage For="@(() => formModel.FullName)" />
+                </div>
+                <div class="col-md-6">
+                    <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
+                    <InputText @bind-Value="formModel.Username" type="text" class="form-control" id="username"
+                               placeholder="Bret" />
+                    <ValidationMessage For="@(() => formModel.Username)" />
+                </div>
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                    <InputText @bind-Value="formModel.Email" type="email" class="form-control" id="email"
+                               placeholder="example@mail.com" />
+                    <ValidationMessage For="@(() => formModel.Email)" />
+                </div>
+                <div class="col-md-6">
+                    <label for="phone" class="form-label">Điện thoại <span class="text-danger">*</span></label>
+                    <InputText @bind-Value="formModel.Phone" type="tel" class="form-control" id="phone"
+                               placeholder="1-770-736-8031" />
+                    <ValidationMessage For="@(() => formModel.Phone)" />
+                </div>
+                <div class="col-12">
+                    <label for="website" class="form-label">Website <span class="text-danger">*</span></label>
+                    <InputText @bind-Value="formModel.Website" type="text" class="form-control" id="website"
+                               placeholder="hildegard.org" />
+                    <ValidationMessage For="@(() => formModel.Website)" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 ">
+        <button @onclick="CleanAsync" type="reset" class="btn btn-outline-warning rounded-pill px-3">Làm mới</button>
+        <button type="submit" class="btn btn-success rounded-pill px-3 fw-bold">Lưu</button>
+    </div>
+    @* 
+    <!-- Địa chỉ -->
+    <div class="card mb-4">
+        <div class="card-header fw-bold">Địa chỉ</div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label for="street" class="form-label">Đường <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="street" placeholder="Kulas Light">
+                </div>
+                <div class="col-md-4">
+                    <label for="suite" class="form-label">Suite</label>
+                    <input type="text" class="form-control" id="suite" placeholder="Apt. 556">
+                </div>
+                <div class="col-md-8">
+                    <label for="city" class="form-label">Thành phố <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="city" placeholder="Gwenborough">
+                </div>
+                <div class="col-md-4">
+                    <label for="zipcode" class="form-label">Zipcode</label>
+                    <input type="text" class="form-control" id="zipcode" placeholder="92998-3874">
+                </div>
+               
+            </div>
+        </div>
+    </div>
+
+    <!-- Công ty -->
+    <div class="card mb-4">
+        <div class="card-header fw-bold">Công ty</div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-12">
+                    <label for="companyName" class="form-label">Tên công ty <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="companyName" placeholder="Romaguera-Crona">
+                </div>
+                <div class="col-12">
+                    <label for="catchPhrase" class="form-label">Catch phrase</label>
+                    <input type="text" class="form-control" id="catchPhrase"
+                           placeholder="Multi-layered client-server neural-net">
+                </div>
+                <div class="col-12">
+                    <label for="bs" class="form-label">BS</label>
+                    <input type="text" class="form-control" id="bs" placeholder="harness real-time e-markets">
+                </div>
+            </div>
+        </div>
+    </div> *@
+
+    
+</EditForm>
+
+@code {
+    private UserDto formModel = new UserDto();
+
+    private async Task CleanAsync()
+    {
+        
+    }
+}

@@ -1,11 +1,25 @@
 @page "/lifecycle/setparam"
 @using homework.Components.Pages.LifeCycle
+@using homework.Components.Pages.LifeCycle.Dispose
 @using homework.Models.DTOS.LifeCycleProductDtos
 
 
 <h3>Parents in Parameter</h3>
 <input @bind="dto.Name" type="text" name="" id="">
-<Children_SetParam ten="@dto"/>
+<Children_SetParam ten="@dto" />
+<button @onclick="Toggle" class="btn btn-success">@(IsShow ? "ẩn" : "hiện")</button>
+
+@if (IsShow)
+{
+    <Dispose />
+    
+}
 @code {
     private SpecialNameDto dto = new SpecialNameDto();
+
+    private bool IsShow = true;
+    void Toggle()
+    {
+        IsShow = !IsShow;
+    }
 }

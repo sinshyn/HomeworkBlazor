@@ -1,4 +1,5 @@
 @page "/lifecycle/dispose"
+@implements IDisposable
 
 <div>
     <h1>@count</h1>
@@ -6,20 +7,30 @@
 
 @code {
     public int count = 0;
-    Timer time;
+    Timer timeNew;
 
     protected override void OnInitialized()
     {
-        //khi new thì tạo thêm 1 luồng mới
-        time = new Timer((state) =>
+        Console.WriteLine("componet created");
+        //khi khởi tạo = new thì tạo thêm 1 luồng mới
+        timeNew = new Timer((state) =>
         {
             count++;
-            StateHasChanged();
+            Console.WriteLine($"time: {DateTime.Now:HH:mm:ss}");
+            // Chuyển về luồng giao diện trước khi render
+            InvokeAsync(StateHasChanged);
         }, null, 0, 1000);
     }
 
-    
+    //dọn dẹp luồng tạo mới
+    void IDisposable.Dispose()
+    {
+        Console.WriteLine("timeNew disposed");
+        timeNew.Dispose();
+    }
+
+
     @* Thread: luồng 
 dotnet: mặc định 1 luồng
- tạo luồng mới để không ảnh hưởng luồng xử lý khác*@
+ tạo luồng mới để không ảnh hưởng luồng xử lý khác *@
 }

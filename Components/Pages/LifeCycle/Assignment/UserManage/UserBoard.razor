@@ -1,0 +1,22 @@
+@page "/lifecycle/assignment/user-manage"
+@using homework.Models.DTOS.UserDtos
+
+<PageTitle>Quản lý Người Dùng</PageTitle>
+
+
+<div class="container text-center ">
+    <h1 class="text-success mt-3">Quản lý Người Dùng</h1>
+    @* userform *@
+    <UserForm />
+
+
+
+    @* userlist *@
+    <UserList Students="@lstUser" />
+</div>
+
+@code {
+
+    private List<UserDto> lstUser = new List<UserDto>();
+
+}

@@ -1,4 +1,4 @@
-namespace homework.Models.DTOS.ExchangeDto;
+namespace homework.Models.DTOS.ExchangeDtos;
 using System.Text.Json.Serialization;
 
 public class ExchangeRateResponseDto
