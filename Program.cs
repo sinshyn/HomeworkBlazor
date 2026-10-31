@@ -1,4 +1,5 @@
 using homework.Components;
+using homework.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +9,8 @@ builder.Services.AddRazorComponents()
 
 //DI HTTP Client 
 builder.Services.AddHttpClient();
-
+//DI UserService 
+builder.Services.AddScoped<IUserService, UserService>();
 
 
 var app = builder.Build();

@@ -36,127 +36,69 @@
     }
 </style>
 
-<h2>Danh sách người dùng</h2>
-<div class="table-wrap">
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Họ tên</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Điện thoại</th>
-                <th>Website</th>
-                <th>Đường</th>
-                <th>Thành phố</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Leanne Graham</td>
-                <td>Bret</td>
-                <td>Sincere@april.biz</td>
-                <td>1-770-736-8031 x56442</td>
-                <td>hildegard.org</td>
-                <td>Kulas Light</td>
-                <td>Gwenborough</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Ervin Howell</td>
-                <td>Antonette</td>
-                <td>Shanna@melissa.tv</td>
-                <td>010-692-6593 x09125</td>
-                <td>anastasia.net</td>
-                <td>Victor Plains</td>
-                <td>Wisokyburgh</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Clementine Bauch</td>
-                <td>Samantha</td>
-                <td>Nathan@yesenia.net</td>
-                <td>1-463-123-4447</td>
-                <td>ramiro.info</td>
-                <td>Douglas Extension</td>
-                <td>McKenziehaven</td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>Patricia Lebsack</td>
-                <td>Karianne</td>
-                <td>Julianne.OConner@kory.org</td>
-                <td>493-170-9623 x156</td>
-                <td>kale.biz</td>
-                <td>Hoeger Mall</td>
-                <td>South Elvis</td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td>Chelsey Dietrich</td>
-                <td>Kamren</td>
-                <td>Lucio_Hettinger@annie.ca</td>
-                <td>(254)954-1289</td>
-                <td>demarco.info</td>
-                <td>Skiles Walks</td>
-                <td>Roscoeview</td>
-            </tr>
-            <tr>
-                <td>6</td>
-                <td>Mrs. Dennis Schulist</td>
-                <td>Leopoldo_Corkery</td>
-                <td>Karley_Dach@jasper.info</td>
-                <td>1-477-935-8478 x6430</td>
-                <td>ola.org</td>
-                <td>Norberto Crossing</td>
-                <td>South Christy</td>
-            </tr>
-            <tr>
-                <td>7</td>
-                <td>Kurtis Weissnat</td>
-                <td>Elwyn.Skiles</td>
-                <td>Telly.Hoeger@billy.biz</td>
-                <td>210.067.6132</td>
-                <td>elvis.io</td>
-                <td>Rex Trail</td>
-                <td>Howemouth</td>
-            </tr>
-            <tr>
-                <td>8</td>
-                <td>Nicholas Runolfsdottir V</td>
-                <td>Maxime_Nienow</td>
-                <td>Sherwood@rosamond.me</td>
-                <td>586.493.6943 x140</td>
-                <td>jacynthe.com</td>
-                <td>Ellsworth Summit</td>
-                <td>Aliyaview</td>
-            </tr>
-            <tr>
-                <td>9</td>
-                <td>Glenna Reichert</td>
-                <td>Delphine</td>
-                <td>Chaim_McDermott@dana.io</td>
-                <td>(775)976-6794 x41206</td>
-                <td>conrad.com</td>
-                <td>Dayna Park</td>
-                <td>Bartholomebury</td>
-            </tr>
-            <tr>
-                <td>10</td>
-                <td>Clementina DuBuque</td>
-                <td>Moriah.Stanton</td>
-                <td>Rey.Padberg@karina.biz</td>
-                <td>024-648-3804</td>
-                <td>ambrose.net</td>
-                <td>Kattie Turnpike</td>
-                <td>Lebsackbury</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="card my-4">
+    <div class="card-header fw-bold">
+        <h2>Danh sách người dùng</h2>
+    </div>
+    @if (Users != null && Users.Any())
+    {
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Họ tên</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Điện thoại</th>
+                            <th>Website</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Users)
+                        {
+                            <tr>
+                                <td>@user.Id</td>
+                                <td>@user.FullName</td>
+                                <td>@user.Username</td>
+                                <td>@user.Email</td>
+                                <td>@user.Phone</td>
+                                <td>@user.Website</td>
+                                <td>
+                                    <button @onclick="() => EditUserAsync(user)" type="button"
+                                            class="btn btn-warning rounded-pill w-50">Sửa</button>
+                                    <button @onclick="() => DeleteUserAsync(user.Id)" type="button" class="btn btn-danger rounded-pill w-50">Xóa</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div>Chưa có dữ liệu....</div>
+    }
 </div>
 
 @code {
     [Parameter]
-    public List<UserDto> Students { get; set; }
+    public List<UserDto>? Users { get; set; }
+
+    [Parameter]
+    public EventCallback<UserDto> EditUser { get; set; }
+    private async Task EditUserAsync(UserDto info)
+    {
+        await EditUser.InvokeAsync(info);
+    }
+
+    [Parameter]
+    public EventCallback<int> DeleteUser { get; set; }
+    private async Task DeleteUserAsync(int id)
+    {
+        await DeleteUser.InvokeAsync(id);
+    }
 }

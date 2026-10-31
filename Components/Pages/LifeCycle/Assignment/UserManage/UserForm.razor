@@ -1,3 +1,4 @@
+@using System.Text.Json
 @using homework.Models.DTOS.UserDtos
 
 <style>
@@ -24,11 +25,13 @@
         display: none;
     }
 </style>
-<h1> form người dùng</h1>
-<EditForm Model="formModel">
+
+<EditForm Model="formModel" OnValidSubmit="AddUserAsync">
     <DataAnnotationsValidator />
-    <div class="card mb-4">
-        <div class="card-header fw-bold">Thông tin cơ bản</div>
+    <div class="card my-4">
+        <div class="card-header fw-bold">
+            <h2> form người dùng</h2>
+        </div>
         <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-6">
@@ -66,57 +69,10 @@
     </div>
 
     <div class="d-flex justify-content-end gap-2 ">
-        <button @onclick="CleanAsync" type="reset" class="btn btn-outline-warning rounded-pill px-3">Làm mới</button>
+        <button @onclick="ResetForm" type="reset" class="btn btn-warning rounded-pill px-3">Làm mới</button>
         <button type="submit" class="btn btn-success rounded-pill px-3 fw-bold">Lưu</button>
     </div>
-    @* 
-    <!-- Địa chỉ -->
-    <div class="card mb-4">
-        <div class="card-header fw-bold">Địa chỉ</div>
-        <div class="card-body">
-            <div class="row g-3">
-                <div class="col-md-8">
-                    <label for="street" class="form-label">Đường <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="street" placeholder="Kulas Light">
-                </div>
-                <div class="col-md-4">
-                    <label for="suite" class="form-label">Suite</label>
-                    <input type="text" class="form-control" id="suite" placeholder="Apt. 556">
-                </div>
-                <div class="col-md-8">
-                    <label for="city" class="form-label">Thành phố <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="city" placeholder="Gwenborough">
-                </div>
-                <div class="col-md-4">
-                    <label for="zipcode" class="form-label">Zipcode</label>
-                    <input type="text" class="form-control" id="zipcode" placeholder="92998-3874">
-                </div>
-               
-            </div>
-        </div>
-    </div>
-
-    <!-- Công ty -->
-    <div class="card mb-4">
-        <div class="card-header fw-bold">Công ty</div>
-        <div class="card-body">
-            <div class="row g-3">
-                <div class="col-12">
-                    <label for="companyName" class="form-label">Tên công ty <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="companyName" placeholder="Romaguera-Crona">
-                </div>
-                <div class="col-12">
-                    <label for="catchPhrase" class="form-label">Catch phrase</label>
-                    <input type="text" class="form-control" id="catchPhrase"
-                           placeholder="Multi-layered client-server neural-net">
-                </div>
-                <div class="col-12">
-                    <label for="bs" class="form-label">BS</label>
-                    <input type="text" class="form-control" id="bs" placeholder="harness real-time e-markets">
-                </div>
-            </div>
-        </div>
-    </div> *@
+  
 
     
 </EditForm>
@@ -124,8 +80,60 @@
 @code {
     private UserDto formModel = new UserDto();
 
-    private async Task CleanAsync()
+    //hàm nhận từ cha
+    [Parameter]
+    public EventCallback<UserDto> AddUser { get; set; }
+
+    [Parameter]
+    public UserDto? UserInfo { get; set; }
+
+    //id cũ để quyết định có nên render lại giao diện không
+    private int currentId;
+
+
+    //hàm chung gian để gọi
+    //gọi hàm khi các field trong form thỏa điều kiện => gọi ngay EditForm
+    private async Task AddUserAsync()
     {
-        
+        Console.WriteLine("Thêm User thành công");
+        await AddUser.InvokeAsync(formModel);
+        Console.WriteLine("Data form" + JsonSerializer.Serialize(formModel));
+        ResetForm();
     }
+
+    //hàm reset form
+    private void ResetForm()
+    {
+        formModel = new UserDto();
+    }
+
+    //cập nhật thông tin của user vào form
+    protected override void OnParametersSet()
+    {
+        Console.WriteLine("[OnParametersSet] UserInfo = " + JsonSerializer.Serialize(UserInfo));
+        if (UserInfo != null && UserInfo.Id != currentId)
+        {
+            formModel = new UserDto()
+            {
+                Id = UserInfo.Id,
+                FullName = UserInfo.FullName,
+                Username = UserInfo.Username,
+                Phone = UserInfo.Phone,
+                Email = UserInfo.Email,
+                Website = UserInfo.Website,
+            };
+            currentId = UserInfo.Id;
+        }
+    }
+
+    @* protected override bool ShouldRender()
+    {
+        if (UserInfo != null && UserInfo.Id != currentId)
+        {
+            return true;
+        }
+        return false;
+        
+    } *@
+
 }

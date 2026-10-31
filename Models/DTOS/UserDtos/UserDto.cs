@@ -22,17 +22,18 @@ public class UserDto
     [JsonPropertyName("email")]
     public string Email { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Địa chỉ là bắt buộc")]
-    [JsonPropertyName("address")]
-    public AddressDto Address { get; set; } = new();
-
     [Required(ErrorMessage = "Số điện thoại là bắt buộc")]
+    [RegularExpression(@"^(0|\+84)(3|5|7|8|9)\d{8}$", ErrorMessage = "Số điện thoại không hợp lệ")]
     [JsonPropertyName("phone")]
     public string Phone { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Website là bắt buộc")]
     [JsonPropertyName("website")]
     public string Website { get; set; } = string.Empty;
+
+    // [Required(ErrorMessage = "Địa chỉ là bắt buộc")]
+    // [JsonPropertyName("address")]
+    // public AddressDto Address { get; set; } = new();
 
     // [Required(ErrorMessage = "Công ty là bắt buộc")]
     // [JsonPropertyName("company")]

@@ -1,22 +1,204 @@
 @page "/lifecycle/assignment/user-manage"
 @using homework.Models.DTOS.UserDtos
-
+@using homework.Services
+@inject IUserService UserService
+@inject IJSRuntime JS
 <PageTitle>Quản lý Người Dùng</PageTitle>
 
 
 <div class="container text-center ">
     <h1 class="text-success mt-3">Quản lý Người Dùng</h1>
     @* userform *@
-    <UserForm />
-
-
+    <UserForm AddUser="SaveUserAsync" UserInfo="@InfoUser" />
 
     @* userlist *@
-    <UserList Students="@lstUser" />
+    <UserList Users="@lstUser" EditUser="EditInfo" DeleteUser="RemoveUserAsync" />
 </div>
 
 @code {
+    private UserDto? InfoUser;
+    private List<UserDto> lstUser = new();
 
-    private List<UserDto> lstUser = new List<UserDto>();
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            lstUser = await UserService.GetAllAsync();
+        }
+        catch (Exception ex)
+        {
+            await Error(ex.Message);
+        }
+    }
 
+    // THÊM / SỬA
+    private async Task SaveUserAsync(UserDto newUser)
+    {
+        try
+        {
+            bool isEdit = InfoUser != null && InfoUser.Id == newUser.Id;
+
+            if (isEdit)
+            {
+                await UserService.UpdateAsync(newUser);
+                var index = lstUser.FindIndex(u => u.Id == newUser.Id);
+                if (index >= 0) lstUser[index] = newUser;
+                await Success("Đã cập nhật người dùng");
+            }
+            else
+            {
+                await UserService.AddAsync(newUser);
+                newUser.Id = lstUser.Any() ? lstUser.Max(u => u.Id) + 1 : 1;
+                lstUser.Add(newUser);
+                await Success("Đã thêm người dùng mới");
+            }
+
+            InfoUser = null; // thoát chế độ sửa
+        }
+        catch (Exception ex)
+        {
+            await Error(ex.Message);
+        }
+    }
+
+    private void EditInfo(UserDto user)
+    {
+        InfoUser = user;
+    }
+
+    // XÓA
+    private async Task RemoveUserAsync(int id)
+    {
+        bool ok = await JS.InvokeAsync<bool>("showConfirm", "Bạn chắc chắn?", "Người dùng này sẽ bị xóa");
+        if (!ok) return;
+
+        try
+        {
+            await UserService.DeleteAsync(id);
+            lstUser.RemoveAll(u => u.Id == id);
+            await Success("Đã xóa người dùng");
+        }
+        catch (Exception ex)
+        {
+            await Error(ex.Message);
+        }
+    }
+
+    // Thông báo
+    private Task Success(string text) =>
+        JS.InvokeVoidAsync("showAlert", "Thành công", text, "success").AsTask();
+
+    private Task Error(string text) =>
+        JS.InvokeVoidAsync("showAlert", "Thất bại", text, "error").AsTask();
 }
+
+@* 
+@code {
+
+    private UserDto InfoUser;
+    private List<UserDto> lstUser = new List<UserDto>();
+    /* {
+    new UserDto() {Id=1, FullName="Nguyễn Bách Tùng", Username="tungbach01", Email="tungbach01@gmail.com",
+        Phone="0949476011", Website="bachtung.com.vn"},
+    new UserDto() {Id=2, FullName="Trần Minh Anh", Username="minhanh02", Email="minhanh02@gmail.com",
+        Phone="0912345678", Website="minhanh.com.vn"},
+    new UserDto() {Id=3, FullName="Lê Hoàng Nam", Username="hoangnam03", Email="hoangnam03@gmail.com",
+        Phone="0987654321", Website="hoangnam.vn"}
+    }; */
+
+    //Hàm OnInitializedAsync
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            lstUser = await UserService.GetAllAsync();
+        }
+        catch (Exception ex)
+        {
+            await Error(ex.Message);
+        }
+    }
+    //Hàm LOAD data API
+    private async Task LoadAPIAsync()
+    {
+        lstUser = await _http.GetFromJsonAsync<List<UserDto>>($"https://jsonplaceholder.typicode.com/users") ?? new();
+    }
+
+    //Hàm THÊM/SỬA user
+    private async Task SaveUserAsync(UserDto newUser)
+    {
+        try
+        {
+            bool isEdit = InfoUser != null && InfoUser.Id == newUser.Id;
+
+            HttpResponseMessage response = isEdit
+                ? await _http.PutAsJsonAsync(
+                    $"https://jsonplaceholder.typicode.com/users/{newUser.Id}", newUser)
+                : await _http.PostAsJsonAsync(
+                    "https://jsonplaceholder.typicode.com/users", newUser);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                await Error($"Server trả về lỗi {(int)response.StatusCode}");
+                return;
+            }
+
+            if (isEdit)
+            {
+                var index = lstUser.FindIndex(u => u.Id == newUser.Id);
+                if (index >= 0) lstUser[index] = newUser;
+                await Success("Đã cập nhật người dùng");
+            }
+            else
+            {
+                newUser.Id = lstUser.Any() ? lstUser.Max(u => u.Id) + 1 : 1;
+                lstUser.Add(newUser);
+                await Success("Đã thêm người dùng mới");
+            }
+        }
+        catch (HttpRequestException)
+        {
+            await Error("Không thể kết nối tới server");
+        }
+    }
+
+    //Hàm SỬA user
+    private void EditInfo(UserDto user)
+    {
+        InfoUser = user;
+    }
+
+    //Hàm XÓA user
+    private async Task RemoveUserAsync(int id)
+    {
+        // Hỏi xác nhận trước khi xóa
+        bool ok = await JS.InvokeAsync<bool>("showConfirm", "Bạn chắc chắn?", "Người dùng này sẽ bị xóa");
+        if (!ok) return;
+
+        try
+        {
+            var response = await _http.DeleteAsync($"https://jsonplaceholder.typicode.com/users/{id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                await Error($"Server trả về lỗi {(int)response.StatusCode}");
+                return;
+            }
+
+            lstUser.RemoveAll(u => u.Id == id);
+            await Success("Đã xóa người dùng");
+        }
+        catch (HttpRequestException)
+        {
+            await Error("Không thể kết nối tới server");
+        }
+    }
+    //Hàm thông báo
+    private Task Success(string text) =>
+    JS.InvokeVoidAsync("showAlert", "Thành công", text, "success").AsTask();
+    private Task Error(string text) =>
+        JS.InvokeVoidAsync("showAlert", "Thất bại", text, "error").AsTask();
+
+
+
+} *@
